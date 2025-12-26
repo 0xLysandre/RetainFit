@@ -1,0 +1,88 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Studio {
+  id        String   @id @default(uuid())
+  name      String
+  createdAt DateTime @default(now())
+  
+  members   Member[]
+  classes   ClassSession[]
+  campaigns Campaign[]
+}
+
+model Member {
+  id        String   @id @default(uuid())
+  studioId  String
+  
+  firstName String
+  lastName  String
+  email     String
+  phone     String?
+  joinDate  DateTime @default(now())
+  
+  // Churn Logic Fields
+  status        String   @default("ACTIVE") // ACTIVE, CANCELLED, PAUSED
+  riskScore     Int      @default(0) // 0-100 (High is bad)
+  lastVisitDate DateTime?
+  
+  studio    Studio   @relation(fields: [studioId], references: [id])
+  attendance Attendance[]
+  campaignLogs CampaignLog[]
+}
+
+model ClassSession {
+  id        String   @id @default(uuid())
+  studioId  String
+  name      String
+  startTime DateTime
+  instructor String?
+  
+  studio    Studio   @relation(fields: [studioId], references: [id])
+  attendance Attendance[]
+}
+
+model Attendance {
+  id             String   @id @default(uuid())
+  memberId       String
+  classSessionId String
+  status         String   @default("PRESENT") // RESERVED, PRESENT, LATE_CANCEL, NOSHOW
+  checkInTime    DateTime?
+  
+  member         Member       @relation(fields: [memberId], references: [id])
+  classSession   ClassSession @relation(fields: [classSessionId], references: [id])
+  
+  @@unique([memberId, classSessionId])
+}
+
+model Campaign {
+  id        String   @id @default(uuid())
+  studioId  String
+  name      String
+  description String?
+  type      String   @default("EMAIL")
+  createdAt DateTime @default(now())
+  
+  studio    Studio   @relation(fields: [studioId], references: [id])
+  logs      CampaignLog[]
+}
+
+model CampaignLog {
+  id         String   @id @default(uuid())
+  campaignId String
+  memberId   String
+  sentAt     DateTime @default(now())
+  status     String   @default("SENT") // SENT, OPENED, CLICKED
+  
+  campaign   Campaign @relation(fields: [campaignId], references: [id])
+  member     Member   @relation(fields: [memberId], references: [id])
+}
