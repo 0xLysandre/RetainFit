@@ -1,10 +1,28 @@
-import { PrismaClient } from '../generated/prisma/client'
+import { Pool } from 'pg'
+import { PrismaPg } from '@prisma/adapter-pg'
+import { PrismaClient } from '@prisma/client'
 
 if (!process.env.DATABASE_URL) {
-  throw new Error('DATABASE_URL environment variable is not set')
+    try {
+        require('dotenv').config()
+        if (!process.env.DATABASE_URL) {
+            require('dotenv').config({ path: '.env.local' })
+        }
+    } catch (e) {
+        // Ignore error if dotenv missing or not needed
+    }
 }
 
-// Prisma 7 configuration
-export const prisma = new PrismaClient({ accelerateUrl: process.env.DATABASE_URL })
+if (!process.env.DATABASE_URL) {
+    throw new Error('DATABASE_URL environment variable is not set')
+}
+
+const connectionString = `${process.env.DATABASE_URL}`
+
+const pool = new Pool({ connectionString })
+const adapter = new PrismaPg(pool)
+
+// @ts-ignore
+export const prisma = new PrismaClient({ adapter })
 
 export { PrismaClient }

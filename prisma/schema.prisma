@@ -2,8 +2,8 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client"
-  output   = "../src/generated/prisma"
+  provider = "prisma-client-js"
+  engineType = "library"
 }
 
 datasource db {
@@ -13,11 +13,25 @@ datasource db {
 model Studio {
   id        String   @id @default(uuid())
   name      String
+  clerkOrgId String  @unique
   createdAt DateTime @default(now())
   
   members   Member[]
   classes   ClassSession[]
   campaigns Campaign[]
+  subscription Subscription?
+}
+
+model Subscription {
+  id                   String    @id @default(uuid())
+  studioId             String    @unique
+  stripeCustomerId     String?
+  stripeSubscriptionId String?   @unique
+  stripePriceId        String?
+  stripeCurrentPeriodEnd DateTime?
+  status               String    @default("incomplete") 
+
+  studio               Studio    @relation(fields: [studioId], references: [id])
 }
 
 model Member {

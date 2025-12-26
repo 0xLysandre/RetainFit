@@ -9,6 +9,7 @@ async function main() {
   const studio = await prisma.studio.create({
     data: {
       name: 'Zen Yoga Boutique',
+      clerkOrgId: 'seed_org_123'
     },
   })
   console.log('Created Studio:', studio.name)

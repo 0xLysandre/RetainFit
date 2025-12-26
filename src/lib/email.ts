@@ -11,7 +11,8 @@ export function createResendClient() {
 export async function sendEmail(options: {
   to: string | string[];
   subject: string;
-  html: string;
+  html?: string;
+  react?: any; // Using any to avoid complex React type issues in non-tsx file, or React.ReactNode
   from?: string;
 }) {
   try {
@@ -21,6 +22,7 @@ export async function sendEmail(options: {
       to: Array.isArray(options.to) ? options.to : [options.to],
       subject: options.subject,
       html: options.html,
+      react: options.react,
     });
 
     if (error) {
