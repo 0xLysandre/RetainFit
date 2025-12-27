@@ -57,7 +57,7 @@ export default async function MembersPage() {
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {members.map((member) => (
+                        {members.map((member: any) => (
                             <TableRow key={member.id}>
                                 <TableCell className="font-medium">
                                     <Link href={`/dashboard/members/${member.id}`} className="hover:underline cursor-pointer">

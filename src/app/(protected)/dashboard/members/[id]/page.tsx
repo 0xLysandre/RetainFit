@@ -126,7 +126,7 @@ export default async function MemberPage({ params }: MemberPageProps) {
                                     </tr>
                                 </thead>
                                 <tbody className="[&_tr:last-child]:border-0">
-                                    {member.attendance.map((record) => (
+                                    {member.attendance.map((record: any) => (
                                         <tr key={record.id} className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
                                             <td className="p-4 align-middle">{new Date(record.classSession.startTime).toLocaleDateString()} {new Date(record.classSession.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</td>
                                             <td className="p-4 align-middle font-medium">{record.classSession.name}</td>
