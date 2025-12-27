@@ -31,8 +31,8 @@ export async function calculateMemberRisk(memberId: string): Promise<number> {
     let score = 0;
 
     // Split into periods
-    const currentPeriodVisits = attendance.filter(a => a.classSession.startTime >= thirtyDaysAgo).length;
-    const previousPeriodVisits = attendance.filter(a => a.classSession.startTime >= sixtyDaysAgo && a.classSession.startTime < thirtyDaysAgo).length;
+    const currentPeriodVisits = attendance.filter((a: any) => a.classSession.startTime >= thirtyDaysAgo).length;
+    const previousPeriodVisits = attendance.filter((a: any) => a.classSession.startTime >= sixtyDaysAgo && a.classSession.startTime < thirtyDaysAgo).length;
 
     // Heuristic 1: Drop-off
     if (previousPeriodVisits > 0) {
@@ -45,7 +45,7 @@ export async function calculateMemberRisk(memberId: string): Promise<number> {
     }
 
     // Heuristic 2: Recent absence
-    const lastVisit = attendance.sort((a, b) => b.classSession.startTime.getTime() - a.classSession.startTime.getTime())[0];
+    const lastVisit = attendance.sort((a: any, b: any) => b.classSession.startTime.getTime() - a.classSession.startTime.getTime())[0];
 
     if (!lastVisit || lastVisit.classSession.startTime < fourteenDaysAgo) {
         score += 40; // No visit in 2 weeks
