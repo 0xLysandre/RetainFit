@@ -60,7 +60,7 @@ export default async function ClassesPage() {
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {classes.map((session) => (
+                        {classes.map((session: any) => (
                             <TableRow key={session.id}>
                                 <TableCell>
                                     <div className="font-medium">
